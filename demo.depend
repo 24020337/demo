@@ -1,0 +1,35 @@
+# depslib dependency file v1.0
+1741972587 source:e:\ltnc\demo\main.cpp
+	<SDL.h>
+	<SDL_image.h>
+	<iostream>
+	<cstdlib>
+	<ctime>
+	"background.h"
+	"enemy.h"
+
+1740420426 source:e:\ltnc\csuet-int2215 (advanced programming)\demo\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+
+1741749536 source:e:\ltnc\demo\background.cpp
+	"background.h"
+
+1741749485 e:\ltnc\demo\background.h
+	<SDL.h>
+	<SDL_image.h>
+	<iostream>
+
+1742007431 source:e:\ltnc\demo\enemy.cpp
+	"enemy.h"
+	"background.h"
+	<iostream>
+
+1742058769 e:\ltnc\demo\enemy.h
+	<SDL.h>
+	<SDL_image.h>
+	<cstdlib>
+	<ctime>
+

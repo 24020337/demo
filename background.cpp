@@ -6,9 +6,14 @@ double layer_cut[LAYER_COUNT] = {0, 0, 0, 0, 0, 30, 30, 0};
 double bgX1[LAYER_COUNT], bgX2[LAYER_COUNT];
 
 const char* layer_file[LAYER_COUNT] = {
-    "images/background/layer01.png", "images/background/layer02.png", "images/background/layer03.png",
-    "images/background/layer04.png", "images/background/layer05.png", "images/background/layer06.png",
-    "images/background/layer07.png", "images/background/layer08.png"
+    "images/background/layer01.png",
+    "images/background/layer02.png",
+    "images/background/layer03.png",
+    "images/background/layer04.png",
+    "images/background/layer05.png",
+    "images/background/layer06.png",
+    "images/background/layer07.png",
+    "images/background/layer08.png"
 };
 
 SDL_Texture* LoadTexture(std::string path, SDL_Renderer* renderer) {

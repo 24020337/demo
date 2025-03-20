@@ -1,4 +1,3 @@
-// enemy.cpp
 #include "enemy.h"
 #include "background.h"
 #include <iostream>
@@ -37,7 +36,7 @@ bool Enemy::isOffScreen() { return !isActive; }
 
 GroundEnemy::GroundEnemy() {}
 void GroundEnemy::init(SDL_Texture* tex) {
-    Enemy::init(tex, SCREEN_WIDTH, 440, 70, 70);
+    Enemy::init(tex, SCREEN_WIDTH, 450, 60, 60);
 }
 
 FlyingEnemy::FlyingEnemy() : frameIndex(0), animationDelay(0), width(0), height(0) {}
@@ -45,8 +44,8 @@ FlyingEnemy::FlyingEnemy() : frameIndex(0), animationDelay(0), width(0), height(
 void FlyingEnemy::init(SDL_Texture* tex) {
     SDL_QueryTexture(tex, NULL, NULL, &width, &height);
     width /= 3;
-    Enemy::init(tex, SCREEN_WIDTH, 350, width, height);
-    destRect = {SCREEN_WIDTH, 350, width / 4, height / 4};
+    Enemy::init(tex, SCREEN_WIDTH, 370, width, height);
+    destRect = {SCREEN_WIDTH, 370, width / 4, height / 4};
     for (int i = 0; i < 3; i++) {
         frames[i] = {i * width, 0, width, height};
     }
@@ -93,15 +92,15 @@ void EnemyManager::render(SDL_Renderer* renderer) {
 void EnemyManager::spawnRandomEnemy() {
 
     int distance=SCREEN_WIDTH +rand()%301;
-    //int randomType1 = rand() % 2;
     int randomType = rand() % 3;
 
     if (randomType != 0 ) {
         groundEnemy1.activate(SCREEN_WIDTH);
-        groundEnemy2.activate(SCREEN_WIDTH+10+rand()%300);
+        groundEnemy2.activate(SCREEN_WIDTH+70+rand()%300);
 
     } else {
         flyingEnemy.activate(SCREEN_WIDTH);
+        //groundEnemy2.activate(SCREEN_WIDTH+80);
     }
 }
 

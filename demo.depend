@@ -1,12 +1,14 @@
 # depslib dependency file v1.0
-1741972587 source:e:\ltnc\demo\main.cpp
+1742447339 source:e:\ltnc\demo\main.cpp
 	<SDL.h>
 	<SDL_image.h>
+	<SDL_ttf.h>
 	<iostream>
 	<cstdlib>
 	<ctime>
 	"background.h"
 	"enemy.h"
+	"character.h"
 
 1740420426 source:e:\ltnc\csuet-int2215 (advanced programming)\demo\main.cpp
 	<iostream>
@@ -14,22 +16,40 @@
 	<SDL_image.h>
 	<SDL_ttf.h>
 
-1741749536 source:e:\ltnc\demo\background.cpp
+1742325212 source:e:\ltnc\demo\background.cpp
 	"background.h"
 
-1741749485 e:\ltnc\demo\background.h
+1742325808 e:\ltnc\demo\background.h
 	<SDL.h>
 	<SDL_image.h>
 	<iostream>
 
-1742007431 source:e:\ltnc\demo\enemy.cpp
+1742446296 source:e:\ltnc\demo\enemy.cpp
 	"enemy.h"
 	"background.h"
 	<iostream>
 
-1742058769 e:\ltnc\demo\enemy.h
+1742325792 e:\ltnc\demo\enemy.h
 	<SDL.h>
 	<SDL_image.h>
 	<cstdlib>
 	<ctime>
+	"background.h"
+
+1742440107 source:e:\ltnc\demo\character.cpp
+	"character.h"
+	"background.h"
+
+1742324795 e:\ltnc\demo\character.h
+	<SDL.h>
+	<SDL_image.h>
+	<cstdlib>
+	<ctime>
+	<iostream>
+	"background.h"
+
+1735832789 e:\ltnc\sdl2_ttf-devel-2.24.0-mingw\sdl2_ttf-2.24.0\x86_64-w64-mingw32\include\sdl2\sdl_ttf.h
+	"SDL.h"
+	"begin_code.h"
+	"close_code.h"
 

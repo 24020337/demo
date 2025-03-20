@@ -5,10 +5,10 @@
 #include <SDL_image.h>
 #include <cstdlib>
 #include <ctime>
+#include "background.h"
+
 
 extern int ENEMY_SPEED;
-// Class cơ bản cho tất cả enemy
-
 
 class Enemy {
 protected:
@@ -25,14 +25,13 @@ public:
     bool isOffScreen();
 };
 
-// Enemy trên mặt đất
+
 class GroundEnemy : public Enemy {
 public:
     GroundEnemy();
     void init(SDL_Texture* tex);
 };
 
-// Enemy trên trời (có animation)
 class FlyingEnemy : public Enemy {
 private:
     SDL_Rect frames[3];
@@ -46,16 +45,14 @@ public:
     void update() override;
 };
 
-// Quản lý enemy
 class EnemyManager {
-private:
+
+public:
     SDL_Texture* groundEnemyTex1;
     SDL_Texture* groundEnemyTex2;
     SDL_Texture* flyingEnemyTex;
     GroundEnemy groundEnemy1,groundEnemy2;
     FlyingEnemy flyingEnemy;
-
-public:
     void setEnemySpeed(int speed);
     void init(SDL_Renderer* renderer);
     void update();

@@ -2,7 +2,7 @@
 #include "background.h"
 #include <iostream>
 
-int ENEMY_SPEED=6;
+float ENEMY_SPEED=6;
 
 Enemy::Enemy() : texture(nullptr), isActive(false) {}
 

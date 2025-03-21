@@ -8,7 +8,7 @@
 #include "background.h"
 
 
-extern int ENEMY_SPEED;
+extern float ENEMY_SPEED;
 
 class Enemy {
 protected:

@@ -1,9 +1,9 @@
 #include "background.h"
 
 SDL_Texture* layers[LAYER_COUNT];
-double layer_speed[LAYER_COUNT] = {0.3, 0.4, 0.5, 0.7, 0.7, 2, 2, 3};
-double layer_cut[LAYER_COUNT] = {0, 0, 0, 0, 0, 30, 30, 0};
-double bgX1[LAYER_COUNT], bgX2[LAYER_COUNT];
+float layer_speed[LAYER_COUNT] = {0.1, 0.2, 0.3, 0.5, 0.5, 1.5, 1.5, 3};
+float layer_cut[LAYER_COUNT] = {0, 0, 0, 0, 0, 30, 30, 0};
+float bgX1[LAYER_COUNT], bgX2[LAYER_COUNT];
 
 const char* layer_file[LAYER_COUNT] = {
     "images/background/layer01.png",

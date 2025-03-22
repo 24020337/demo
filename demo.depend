@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1742631836 source:e:\ltnc\demo\main.cpp
+1742665750 source:e:\ltnc\demo\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -18,7 +18,7 @@
 	<SDL_image.h>
 	<SDL_ttf.h>
 
-1742474629 source:e:\ltnc\demo\background.cpp
+1742658247 source:e:\ltnc\demo\background.cpp
 	"background.h"
 
 1742622205 e:\ltnc\demo\background.h
@@ -27,24 +27,24 @@
 	<iostream>
 	"background.h"
 
-1742632397 source:e:\ltnc\demo\enemy.cpp
+1742665792 source:e:\ltnc\demo\enemy.cpp
 	"enemy.h"
 	"background.h"
 	<iostream>
 	"score.h"
 
-1742626259 e:\ltnc\demo\enemy.h
+1742661210 e:\ltnc\demo\enemy.h
 	<SDL.h>
 	<SDL_image.h>
 	<cstdlib>
 	<ctime>
 	"background.h"
 
-1742440107 source:e:\ltnc\demo\character.cpp
+1742661210 source:e:\ltnc\demo\character.cpp
 	"character.h"
 	"background.h"
 
-1742324795 e:\ltnc\demo\character.h
+1742661242 e:\ltnc\demo\character.h
 	<SDL.h>
 	<SDL_image.h>
 	<cstdlib>
@@ -57,7 +57,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1742631819 source:e:\ltnc\demo\score.cpp
+1742665676 source:e:\ltnc\demo\score.cpp
 	"score.h"
 	"background.h"
 

@@ -62,6 +62,7 @@ public:
     void render(SDL_Renderer* renderer);
     void spawnRandomEnemy();
     void close();
+    void reset();
 };
 
 #endif

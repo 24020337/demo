@@ -43,3 +43,12 @@ void Character::jump() {
     }
 }
 SDL_Rect Character::getRect() { return destRect; }
+
+void Character::reset(){
+    destRect.y=GROUND_LEVEL;    // trở về mặt đất
+    isJumping = false;          // Đảm bảo nhân vật không còn ở trạng thái nhảy
+    velocityY = 0;              // Đặt lại vận tốc nhảy để tránh trục trặc khi khởi động lại
+    frameIndex = 0;             // Reset lại hoạt ảnh về frame đầu tiên
+    animationDelay = 0;         // Đặt lại bộ đếm hoạt ảnh
+
+}

@@ -5,8 +5,7 @@
 
 
 // tăng tốc độ
-float ENEMY_SPEED_BASE=7.0f;
-float ENEMY_SPEED=ENEMY_SPEED_BASE;
+float ENEMY_SPEED=5.0f;
 float ENEMY_SPEED_MAX=12.0f;
 
 Enemy::Enemy() : texture(nullptr), isActive(false) {}
@@ -71,7 +70,7 @@ void EnemyManager::init(SDL_Renderer* renderer) {
     groundEnemyTex1 = IMG_LoadTexture(renderer, "images/enemy/cactus.png");
     groundEnemyTex2 = IMG_LoadTexture(renderer, "images/enemy/cactus.png");
     groundEnemyTex3 = IMG_LoadTexture(renderer, "images/enemy/cactus.png");
-    flyingEnemyTex = IMG_LoadTexture(renderer, "images/enemy/flappybird.png");
+    flyingEnemyTex  = IMG_LoadTexture(renderer, "images/enemy/flappybird.png");
 
     groundEnemy1.init(groundEnemyTex1);
     groundEnemy2.init(groundEnemyTex2);
@@ -109,12 +108,12 @@ void EnemyManager::spawnRandomEnemy() {
     if (randomType != 0 ){
         if(score<300){
         groundEnemy1.activate(SCREEN_WIDTH);
-        groundEnemy3.activate(SCREEN_WIDTH+20+rand()%200);
+        groundEnemy3.activate(SCREEN_WIDTH+300);
         }
         if(score>=310){
         groundEnemy1.activate(SCREEN_WIDTH);
-        groundEnemy2.activate(SCREEN_WIDTH+20+rand()%100);
-        groundEnemy3.activate(SCREEN_WIDTH+500+rand()%200);
+        groundEnemy2.activate(SCREEN_WIDTH+300);
+        groundEnemy3.activate(SCREEN_WIDTH+750);
         }
     }
     else {
@@ -127,4 +126,14 @@ void EnemyManager::close() {
     SDL_DestroyTexture(groundEnemyTex1);
     SDL_DestroyTexture(groundEnemyTex2);
     SDL_DestroyTexture(flyingEnemyTex);
+}
+
+void EnemyManager::reset() {
+
+    ENEMY_SPEED = 5.0f;
+
+    groundEnemy1.isActive = false;
+    groundEnemy2.isActive = false;
+    groundEnemy3.isActive = false;
+    flyingEnemy.isActive  = false;
 }

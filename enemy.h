@@ -8,7 +8,9 @@
 #include "background.h"
 
 
+extern float ENEMY_SPEED_BASE;
 extern float ENEMY_SPEED;
+extern float ENEMY_SPEED_MAX;
 
 class Enemy {
 protected:
@@ -50,15 +52,16 @@ class EnemyManager {
 public:
     SDL_Texture* groundEnemyTex1;
     SDL_Texture* groundEnemyTex2;
+    SDL_Texture* groundEnemyTex3;
     SDL_Texture* flyingEnemyTex;
-    GroundEnemy groundEnemy1,groundEnemy2;
+    GroundEnemy groundEnemy1,groundEnemy2,groundEnemy3;
     FlyingEnemy flyingEnemy;
     void setEnemySpeed(int speed);
     void init(SDL_Renderer* renderer);
     void update();
     void render(SDL_Renderer* renderer);
     void spawnRandomEnemy();
-    void cleanUp();
+    void close();
 };
 
 #endif

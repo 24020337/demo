@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
+#include "background.h"
 
 const int GROUND_LEVEL = 440;
 const int SCREEN_WIDTH = 1000;

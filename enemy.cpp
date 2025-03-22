@@ -1,8 +1,13 @@
 #include "enemy.h"
 #include "background.h"
 #include <iostream>
+#include "score.h"
 
-float ENEMY_SPEED=6;
+
+// tăng tốc độ
+float ENEMY_SPEED_BASE=7.0f;
+float ENEMY_SPEED=ENEMY_SPEED_BASE;
+float ENEMY_SPEED_MAX=12.0f;
 
 Enemy::Enemy() : texture(nullptr), isActive(false) {}
 
@@ -65,10 +70,12 @@ void FlyingEnemy::update() {
 void EnemyManager::init(SDL_Renderer* renderer) {
     groundEnemyTex1 = IMG_LoadTexture(renderer, "images/enemy/cactus.png");
     groundEnemyTex2 = IMG_LoadTexture(renderer, "images/enemy/cactus.png");
+    groundEnemyTex3 = IMG_LoadTexture(renderer, "images/enemy/cactus.png");
     flyingEnemyTex = IMG_LoadTexture(renderer, "images/enemy/flappybird.png");
 
     groundEnemy1.init(groundEnemyTex1);
     groundEnemy2.init(groundEnemyTex2);
+    groundEnemy3.init(groundEnemyTex3);
     flyingEnemy.init(flyingEnemyTex);
 
     spawnRandomEnemy();
@@ -77,8 +84,12 @@ void EnemyManager::init(SDL_Renderer* renderer) {
 void EnemyManager::update() {
     groundEnemy1.update();
     groundEnemy2.update();
+    groundEnemy3.update();
     flyingEnemy.update();
-    if (groundEnemy2.isOffScreen()&&flyingEnemy.isOffScreen()) {
+    if (groundEnemy3.isOffScreen()&&flyingEnemy.isOffScreen() && score<300) {
+        spawnRandomEnemy();
+    }
+    if (groundEnemy3.isOffScreen()&&flyingEnemy.isOffScreen() && score>=310) {
         spawnRandomEnemy();
     }
 }
@@ -86,6 +97,7 @@ void EnemyManager::update() {
 void EnemyManager::render(SDL_Renderer* renderer) {
     groundEnemy1.render(renderer);
     groundEnemy2.render(renderer);
+    groundEnemy3.render(renderer);
     flyingEnemy.render(renderer);
 }
 
@@ -94,17 +106,24 @@ void EnemyManager::spawnRandomEnemy() {
     int distance=SCREEN_WIDTH +rand()%301;
     int randomType = rand() % 3;
 
-    if (randomType != 0 ) {
+    if (randomType != 0 ){
+        if(score<300){
         groundEnemy1.activate(SCREEN_WIDTH);
-        groundEnemy2.activate(SCREEN_WIDTH+70+rand()%300);
-
-    } else {
+        groundEnemy3.activate(SCREEN_WIDTH+20+rand()%200);
+        }
+        if(score>=310){
+        groundEnemy1.activate(SCREEN_WIDTH);
+        groundEnemy2.activate(SCREEN_WIDTH+20+rand()%100);
+        groundEnemy3.activate(SCREEN_WIDTH+500+rand()%200);
+        }
+    }
+    else {
         flyingEnemy.activate(SCREEN_WIDTH);
         //groundEnemy2.activate(SCREEN_WIDTH+80);
     }
 }
 
-void EnemyManager::cleanUp() {
+void EnemyManager::close() {
     SDL_DestroyTexture(groundEnemyTex1);
     SDL_DestroyTexture(groundEnemyTex2);
     SDL_DestroyTexture(flyingEnemyTex);

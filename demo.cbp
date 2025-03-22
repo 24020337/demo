@@ -40,6 +40,8 @@
 		<Unit filename="enemy.cpp" />
 		<Unit filename="enemy.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="score.cpp" />
+		<Unit filename="score.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

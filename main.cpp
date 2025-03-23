@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_mixer.h>
 #include <SDL_ttf.h>
 #include <iostream>
 #include <cstdlib>
@@ -27,7 +28,7 @@ bool isPlaying = false; // Khi false, hiển thị nút "PLAY"
 
 SDL_Texture* playButton = NULL;
 SDL_Texture* reset = NULL;
-SDL_Rect playRect = {450, 225, 150, 98}; // Vị trí và kích thước của nút "PLAY"
+SDL_Rect playRect = {425, 225, 150, 98}; // Vị trí và kích thước của nút "PLAY"
 SDL_Rect scrButton={0,0,150,98};
 
 void loadPlayButton() {
@@ -53,95 +54,80 @@ bool checkCollision(SDL_Rect a, SDL_Rect b) {
 }
 
 void gameLoop() {
-    bool running = true;
     SDL_Event e;
-
     Uint32 lastTime = SDL_GetTicks(), currentTime;
     float deltaTime;
 
-    highScore = loadHighScore();
-    updateScoreTextures();
+    // Reset mọi thứ khi bắt đầu vòng chơi mới
+    scoreF = 0;
+    score = 0;
+    enemyManager.reset();
+    character.reset();
+    isPlaying = true;  // Game bắt đầu chơi
 
-    while (running) {
+    while (isPlaying) { // Chạy đến khi thua
         while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) running = false;
-
-            // Nhấn "R" restart game
-            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE && !isPlaying)
-                running=false;
-
-            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_SPACE && !isPlaying) {
-                isPlaying = true;
-                scoreF = 0;
-                score=0;
-                enemyManager.reset();
-                character.reset();
-            }
-
-            // Nhấn SPACE khi đang chơi
-            if (e.type == SDL_KEYDOWN && (e.key.keysym.sym == SDLK_SPACE || e.key.keysym.sym == SDLK_UP) && isPlaying) {
+            if (e.type == SDL_QUIT) return; // Thoát game
+            if (e.type == SDL_KEYDOWN && (e.key.keysym.sym == SDLK_SPACE || e.key.keysym.sym == SDLK_UP)){
+                Mix_Chunk* jumpSound = Mix_LoadWAV("sound/jump_sound.wav");
+                Mix_PlayChannel(-1, jumpSound, 0);
                 character.jump();
             }
         }
 
-        // Tính deltaTime
+        // Cập nhật thời gian trôi qua
         currentTime = SDL_GetTicks();
         deltaTime = (currentTime - lastTime) / 1000.0f;
         lastTime = currentTime;
 
-        if(isPlaying){
-
-             // Cập nhật điểm số mượt hơn
-            scoreF += deltaTime * 20;
-            int newScore = (int)scoreF;
-            if (newScore > score) {
-                score = newScore;
-                updateScoreTextures(); // Chỉ cập nhật khi điểm thay đổi
-            }
-            // cập nhật level tốc độ
-            if(score%100==0){
-                ENEMY_SPEED +=0.1;
-                if (ENEMY_SPEED > ENEMY_SPEED_MAX) ENEMY_SPEED = ENEMY_SPEED_MAX;
-            }
-
-            updateBackground();
-            enemyManager.update();
-            character.update();
-
-            // Kiểm tra va chạm
-            if (checkCollision(character.getRect(), enemyManager.groundEnemy1.destRect) ||
-                checkCollision(character.getRect(), enemyManager.groundEnemy2.destRect) ||
-                checkCollision(character.getRect(), enemyManager.groundEnemy3.destRect) ||
-                checkCollision(character.getRect(), enemyManager.flyingEnemy.destRect)) {
-
-                if (score > highScore) {
-                    highScore = score;
-                    saveHighScore(highScore);
-                    updateScoreTextures(); // Cập nhật lại highScore
-                }
-                isPlaying = false;
-            }
+        // Cập nhật điểm số
+        scoreF += deltaTime * 20;
+        int newScore = (int)scoreF;
+        if (newScore > score) {
+            score = newScore;
+            updateScoreTextures();
         }
 
+        // Cập nhật tốc độ nếu điểm cao hơn
+        if (score % 100 == 0) {
+            ENEMY_SPEED += 0.1;
+            if (ENEMY_SPEED > ENEMY_SPEED_MAX) ENEMY_SPEED = ENEMY_SPEED_MAX;
+        }
+
+        // Cập nhật nhân vật và kẻ địch
+        updateBackground();
+        enemyManager.update();
+        character.update();
+
+        // Kiểm tra va chạm
+        if (checkCollision(character.getRect(), enemyManager.groundEnemy1.destRect) ||
+            checkCollision(character.getRect(), enemyManager.groundEnemy2.destRect) ||
+            checkCollision(character.getRect(), enemyManager.groundEnemy3.destRect) ||
+            checkCollision(character.getRect(), enemyManager.flyingEnemy.destRect)) {
+
+            if (score > highScore) {
+                highScore = score;
+                saveHighScore(highScore);
+                updateScoreTextures();
+            }
+
+            isPlaying = false;  // Game over
+            Mix_Chunk* loseSound = Mix_LoadWAV("sound/lose_sound.wav");
+            Mix_PlayChannel(-1, loseSound, 0);
+
+        }
+
+        // Vẽ lại màn hình
         SDL_RenderClear(renderer);
         renderBackground();
-
-        if (isPlaying) {
-            character.render(renderer);
-            enemyManager.render(renderer);
-            renderscore();
-        } else {
-            SDL_RenderCopy(renderer, reset,NULL,NULL);
-        }
-
-
+        character.render(renderer);
+        enemyManager.render(renderer);
+        renderscore();
         SDL_RenderPresent(renderer);
-
     }
 }
 
 int main(int argc, char* argv[]) {
-
     initSDL(window, renderer);
     enemyManager.init(renderer);
     initBackgrounds();
@@ -149,40 +135,79 @@ int main(int argc, char* argv[]) {
     loadPlayButton();
     loadreset();
 
+    // Khởi tạo âm thanh
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+    Mix_Chunk* bgSound = Mix_LoadWAV("sound/bkgr_audio.wav");
+    Mix_PlayChannel(-1, bgSound, -1);
+
+    // Khởi tạo font chữ
     TTF_Init();
-    font=TTF_OpenFont("font/pixel_font.ttf", 24);
+    font = TTF_OpenFont("font/pixel_font.ttf", 24);
     if (!font) logSDLError(std::cout, "TTF_OpenFont", true);
 
     SDL_Event event;
-    while(!isPlaying){
-        while (SDL_PollEvent(&event)) {
-            if(event.type==SDL_MOUSEMOTION){
-                int X = event.motion.x;
-                int Y = event.motion.y;
-                if(isPlayButtonClicked(X,Y)){
+     bool waitingToStart = true;
+        while (waitingToStart) {
+            while (SDL_PollEvent(&event)) {
+                if (event.type == SDL_QUIT) return 0;
+
+                if (event.type == SDL_MOUSEMOTION) {
+                    int X = event.motion.x, Y = event.motion.y;
+                    if(isPlayButtonClicked(X,Y)){
                     scrButton={150,0,150,98};
                 }
                 else{
                     scrButton={0,0,150,98};
                 }
-            }
-            if (event.type == SDL_MOUSEBUTTONDOWN) {
-                int x, y;
-                SDL_GetMouseState(&x, &y);
-                if (!isPlaying && isPlayButtonClicked(x, y)) {
-                isPlaying = true; // Bắt đầu click nút "PLAY"
+
+                }
+
+                if (event.type == SDL_MOUSEBUTTONDOWN) {
+                    int x, y;
+                    SDL_GetMouseState(&x, &y);
+                    Mix_Chunk* clickSound = Mix_LoadWAV("sound/mouse_click.wav");
+                    Mix_PlayChannel(-1, clickSound, 0);
+                    if (isPlayButtonClicked(x, y)) {
+                        waitingToStart = false;  // Bắt đầu chơi
+                    }
                 }
             }
+
+            // Hiển thị nút "PLAY"
+            SDL_RenderClear(renderer);
+            renderBackground();
+            SDL_RenderCopy(renderer, playButton, &scrButton, &playRect);
+            SDL_RenderPresent(renderer);
         }
-    SDL_RenderClear(renderer);
-    renderBackground();
-    SDL_RenderCopy(renderer, playButton, &scrButton, &playRect); // Hiển thị nút "PLAY"
-    SDL_RenderPresent(renderer);
+
+    while (true) {
+
+        //START GAME
+        gameLoop();
+
+        bool waitingForRestart = true;
+        while (waitingForRestart) {
+            while (SDL_PollEvent(&event)) {
+                if (event.type == SDL_QUIT) return 0;
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) exit(0);;
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
+                    waitingForRestart = false; // Restart game
+                }
+            }
+
+            // Hiển thị màn hình thua
+            SDL_RenderClear(renderer);
+            renderBackground();
+            character.render(renderer);
+            enemyManager.render(renderer);
+            renderscore();
+            SDL_RenderCopy(renderer, reset, NULL, NULL);
+            SDL_RenderPresent(renderer);
+        }
     }
-    SDL_RenderClear(renderer);
 
-    gameLoop();
-
+    // Giải phóng tài nguyên (nếu có thoát vòng lặp chính)
     SDL_DestroyTexture(playButton);
     SDL_DestroyTexture(reset);
     closeScore();

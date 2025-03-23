@@ -1,7 +1,8 @@
 # depslib dependency file v1.0
-1742665750 source:e:\ltnc\demo\main.cpp
+1742742330 source:e:\ltnc\demo\main.cpp
 	<SDL.h>
 	<SDL_image.h>
+	<SDL_mixer.h>
 	<SDL_ttf.h>
 	<iostream>
 	<cstdlib>

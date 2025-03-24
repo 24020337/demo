@@ -69,9 +69,9 @@ void gameLoop() {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) return; // Thoát game
             if (e.type == SDL_KEYDOWN && (e.key.keysym.sym == SDLK_SPACE || e.key.keysym.sym == SDLK_UP)){
+                character.jump();
                 Mix_Chunk* jumpSound = Mix_LoadWAV("sound/jump_sound.wav");
                 Mix_PlayChannel(-1, jumpSound, 0);
-                character.jump();
             }
         }
 
@@ -114,7 +114,6 @@ void gameLoop() {
             isPlaying = false;  // Game over
             Mix_Chunk* loseSound = Mix_LoadWAV("sound/lose_sound.wav");
             Mix_PlayChannel(-1, loseSound, 0);
-
         }
 
         // Vẽ lại màn hình
@@ -190,7 +189,7 @@ int main(int argc, char* argv[]) {
         while (waitingForRestart) {
             while (SDL_PollEvent(&event)) {
                 if (event.type == SDL_QUIT) return 0;
-                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) exit(0);;
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) exit(0);
                 if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
                     waitingForRestart = false; // Restart game
                 }

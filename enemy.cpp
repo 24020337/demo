@@ -132,6 +132,11 @@ void EnemyManager::reset() {
 
     ENEMY_SPEED = 5.0f;
 
+    groundEnemy1.destRect.x = 0;
+    groundEnemy2.destRect.x = 0;
+    groundEnemy3.destRect.x = 0;
+    flyingEnemy.destRect.x  = 0;
+
     groundEnemy1.isActive = false;
     groundEnemy2.isActive = false;
     groundEnemy3.isActive = false;

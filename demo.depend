@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1742747878 source:e:\ltnc\demo\main.cpp
+1743046339 source:e:\ltnc\demo\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_mixer.h>
@@ -28,7 +28,7 @@
 	<iostream>
 	"background.h"
 
-1742747423 source:e:\ltnc\demo\enemy.cpp
+1743045111 source:e:\ltnc\demo\enemy.cpp
 	"enemy.h"
 	"background.h"
 	<iostream>
@@ -58,7 +58,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1742665676 source:e:\ltnc\demo\score.cpp
+1743044043 source:e:\ltnc\demo\score.cpp
 	"score.h"
 	"background.h"
 

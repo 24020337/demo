@@ -69,9 +69,9 @@ void gameLoop() {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) return; // Thoát game
             if (e.type == SDL_KEYDOWN && (e.key.keysym.sym == SDLK_SPACE || e.key.keysym.sym == SDLK_UP)){
-                character.jump();
                 Mix_Chunk* jumpSound = Mix_LoadWAV("sound/jump_sound.wav");
                 Mix_PlayChannel(-1, jumpSound, 0);
+                  character.jump();
             }
         }
 
@@ -133,6 +133,7 @@ int main(int argc, char* argv[]) {
     character.Init();
     loadPlayButton();
     loadreset();
+    loadHighScore();
 
     // Khởi tạo âm thanh
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);

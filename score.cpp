@@ -19,13 +19,12 @@ void saveHighScore(int highScore) {
 }
 
 int loadHighScore() {
-    int hs = 0;
     std::ifstream file("highscore.txt");
     if (file.is_open()) {
-        file >> hs;
+        file >> highScore;
         file.close();
     }
-    return hs;
+    return highScore;
 }
 
 void updateScoreTextures() {

@@ -117,8 +117,13 @@ void EnemyManager::spawnRandomEnemy() {
         }
     }
     else {
+        if(score<500){
         flyingEnemy.activate(SCREEN_WIDTH);
-        //groundEnemy2.activate(SCREEN_WIDTH+80);
+        }
+        if(score>=510){
+        flyingEnemy.activate(SCREEN_WIDTH);
+        groundEnemy3.activate(SCREEN_WIDTH+50+rand()%50);
+        }
     }
 }
 

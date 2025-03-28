@@ -10,6 +10,7 @@
 #include "enemy.h"
 #include "character.h"
 #include "score.h"
+#include "states.h"
 
 SDL_Renderer* renderer = NULL;
 SDL_Window* window = NULL;
@@ -25,29 +26,6 @@ void initSDL(SDL_Window*& window, SDL_Renderer*& renderer);
 void quitSDL(SDL_Window* window, SDL_Renderer* renderer);
 
 bool isPlaying = false; // Khi false, hiển thị nút "PLAY"
-
-SDL_Texture* playButton = NULL;
-SDL_Texture* reset = NULL;
-SDL_Rect playRect = {425, 225, 150, 98}; // Vị trí và kích thước của nút "PLAY"
-SDL_Rect scrButton={0,0,150,98};
-
-void loadPlayButton() {
-    SDL_Surface* surface = IMG_Load("images/states/play_button.png");
-    playButton = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
-}
-void loadreset() {
-    SDL_Surface* surface = IMG_Load("images/states/lose.png");
-    reset = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
-}
-
-// Kiểm tra click vào nút PLAY
-bool isPlayButtonClicked(int mouseX, int mouseY) {
-    return (mouseX >= playRect.x && mouseX <= playRect.x + playRect.w &&
-            mouseY >= playRect.y && mouseY <= playRect.y + playRect.h);
-}
-
 bool checkCollision(SDL_Rect a, SDL_Rect b) {
     return (a.x < b.x + b.w * 0.57 && a.x + a.w * 0.57 > b.x &&
             a.y < b.y + b.h * 0.57 && a.y + a.h * 0.57 > b.y);
@@ -58,21 +36,53 @@ void gameLoop() {
     Uint32 lastTime = SDL_GetTicks(), currentTime;
     float deltaTime;
 
-    // Reset mọi thứ khi bắt đầu vòng chơi mới
+    // Reset trạng thái game khi bắt đầu vòng mới
     scoreF = 0;
     score = 0;
     enemyManager.reset();
     character.reset();
-    isPlaying = true;  // Game bắt đầu chơi
+    isPlaying = true;
+    bool isPaused = false; // Trạng thái tạm dừng
 
-    while (isPlaying) { // Chạy đến khi thua
+    while (isPlaying) {
         while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) return; // Thoát game
-            if (e.type == SDL_KEYDOWN && (e.key.keysym.sym == SDLK_SPACE || e.key.keysym.sym == SDLK_UP)){
-                Mix_Chunk* jumpSound = Mix_LoadWAV("sound/jump_sound.wav");
-                Mix_PlayChannel(-1, jumpSound, 0);
-                  character.jump();
+            if (e.type == SDL_QUIT) return; // Thoát game khi đóng cửa sổ
+            if (e.type == SDL_KEYDOWN) {
+                if (e.key.keysym.sym == SDLK_ESCAPE) return; // Nhấn ESC để thoát game
+
+                if (e.key.keysym.sym == SDLK_p) {
+                    isPaused = !isPaused; // Nhấn P để tạm dừng hoặc tiếp tục
+                }
+
+                if (!isPaused && (e.key.keysym.sym == SDLK_SPACE || e.key.keysym.sym == SDLK_UP)) {
+                    Mix_Chunk* jumpSound = Mix_LoadWAV("sound/jump_sound.wav");
+                    Mix_PlayChannel(-1, jumpSound, 0);
+                    character.jump();
+                }
             }
+
+            // Kiểm tra click chuột vào nút Pause/Continue
+            if (e.type == SDL_MOUSEBUTTONDOWN) {
+                int x, y;
+                SDL_GetMouseState(&x, &y);
+                if (isButtonClicked(x, y, pause_or_continue)) {
+                    isPaused = !isPaused;
+                    Mix_Chunk* clickSound = Mix_LoadWAV("sound/mouse_click.wav");
+                    Mix_PlayChannel(-1, clickSound, 0);
+                }
+            }
+        }
+
+        if (isPaused) {
+            // Hiển thị màn hình "PAUSE"
+            SDL_RenderClear(renderer);
+            renderBackground();
+            character.render(renderer);
+            enemyManager.render(renderer);
+            renderscore();
+            SDL_RenderCopy(renderer, continueButton, &scrButton_PC, &pause_or_continue);
+            SDL_RenderPresent(renderer);
+            continue; // Bỏ qua các cập nhật game khi tạm dừng
         }
 
         // Cập nhật thời gian trôi qua
@@ -88,7 +98,7 @@ void gameLoop() {
             updateScoreTextures();
         }
 
-        // Cập nhật tốc độ nếu điểm cao hơn
+        // Cập nhật tốc độ nếu điểm đạt mốc
         if (score % 100 == 0) {
             ENEMY_SPEED += 0.1;
             if (ENEMY_SPEED > ENEMY_SPEED_MAX) ENEMY_SPEED = ENEMY_SPEED_MAX;
@@ -122,6 +132,7 @@ void gameLoop() {
         character.render(renderer);
         enemyManager.render(renderer);
         renderscore();
+        SDL_RenderCopy(renderer, pauseButton, &scrButton_PC, &pause_or_continue);
         SDL_RenderPresent(renderer);
     }
 }
@@ -131,7 +142,7 @@ int main(int argc, char* argv[]) {
     enemyManager.init(renderer);
     initBackgrounds();
     character.Init();
-    loadPlayButton();
+    load_All_Button();
     loadreset();
     loadHighScore();
 
@@ -147,37 +158,49 @@ int main(int argc, char* argv[]) {
     if (!font) logSDLError(std::cout, "TTF_OpenFont", true);
 
     SDL_Event event;
-     bool waitingToStart = true;
-        while (waitingToStart) {
-            while (SDL_PollEvent(&event)) {
-                if (event.type == SDL_QUIT) return 0;
+    bool waitingToStart = true;
+    while (waitingToStart) {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) return 0;
 
-                if (event.type == SDL_MOUSEMOTION) {
-                    int X = event.motion.x, Y = event.motion.y;
-                    if(isPlayButtonClicked(X,Y)){
-                    scrButton={150,0,150,98};
+            if (event.type == SDL_MOUSEMOTION) {
+                int X = event.motion.x, Y = event.motion.y;
+                if(isButtonClicked(X,Y,playRect_Play)){
+                scrButton_Play={150,0,150,98};
                 }
                 else{
-                    scrButton={0,0,150,98};
+                scrButton_Play={0,0,150,98};
                 }
 
+                if(isButtonClicked(X,Y,playRect_Exit)){
+                scrButton_Exit={150,0,150,98};
                 }
+                else{
+                scrButton_Exit={0,0,150,98};
+                }
+            }
 
-                if (event.type == SDL_MOUSEBUTTONDOWN) {
-                    int x, y;
-                    SDL_GetMouseState(&x, &y);
-                    Mix_Chunk* clickSound = Mix_LoadWAV("sound/mouse_click.wav");
-                    Mix_PlayChannel(-1, clickSound, 0);
-                    if (isPlayButtonClicked(x, y)) {
-                        waitingToStart = false;  // Bắt đầu chơi
+            if (event.type == SDL_MOUSEBUTTONDOWN) {
+                int x, y;
+                SDL_GetMouseState(&x, &y);
+                Mix_Chunk* clickSound = Mix_LoadWAV("sound/mouse_click.wav");
+                Mix_PlayChannel(-1, clickSound, 0);
+
+                if (isButtonClicked(x, y,playRect_Play)) {
+                    waitingToStart = false;  // Bắt đầu chơi
+                    }
+                if (isButtonClicked(x, y,playRect_Exit)) {
+                        SDL_Delay(240);     // Esc game
+                        exit(0);
                     }
                 }
             }
 
-            // Hiển thị nút "PLAY"
+            // Hiển thị nút
             SDL_RenderClear(renderer);
             renderBackground();
-            SDL_RenderCopy(renderer, playButton, &scrButton, &playRect);
+            SDL_RenderCopy(renderer, playButton, &scrButton_Play, &playRect_Play);
+            SDL_RenderCopy(renderer, exitButton, &scrButton_Exit, &playRect_Exit);
             SDL_RenderPresent(renderer);
         }
 
@@ -185,7 +208,7 @@ int main(int argc, char* argv[]) {
 
         //START GAME
         gameLoop();
-
+        // đợi cho đến khi chơi lại
         bool waitingForRestart = true;
         while (waitingForRestart) {
             while (SDL_PollEvent(&event)) {

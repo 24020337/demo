@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1743046339 source:e:\ltnc\demo\main.cpp
+1743192321 source:e:\ltnc\demo\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_mixer.h>
@@ -12,6 +12,7 @@
 	"enemy.h"
 	"character.h"
 	"score.h"
+	"states.h"
 
 1740420426 source:e:\ltnc\csuet-int2215 (advanced programming)\demo\main.cpp
 	<iostream>
@@ -22,13 +23,12 @@
 1742658247 source:e:\ltnc\demo\background.cpp
 	"background.h"
 
-1742622205 e:\ltnc\demo\background.h
+1743179289 e:\ltnc\demo\background.h
 	<SDL.h>
 	<SDL_image.h>
 	<iostream>
-	"background.h"
 
-1743045111 source:e:\ltnc\demo\enemy.cpp
+1743188101 source:e:\ltnc\demo\enemy.cpp
 	"enemy.h"
 	"background.h"
 	<iostream>
@@ -41,7 +41,7 @@
 	<ctime>
 	"background.h"
 
-1742661210 source:e:\ltnc\demo\character.cpp
+1743188110 source:e:\ltnc\demo\character.cpp
 	"character.h"
 	"background.h"
 
@@ -67,4 +67,20 @@
 	<fstream>
 	<iostream>
 	<SDL.h>
+
+1743192088 source:e:\ltnc\demo\states.cpp
+	"states.h"
+	"background.h"
+	<SDL.h>
+	<SDL_image.h>
+	"enemy.h"
+	"character.h"
+	"score.h"
+	"states.h"
+	<SDL_mixer.h>
+
+1743192058 e:\ltnc\demo\states.h
+	<SDL.h>
+	<SDL_image.h>
+	<iostream>
 

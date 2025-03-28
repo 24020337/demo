@@ -32,12 +32,12 @@ SDL_Rect playRect = {425, 225, 150, 98}; // Vị trí và kích thước của n
 SDL_Rect scrButton={0,0,150,98};
 
 void loadPlayButton() {
-    SDL_Surface* surface = IMG_Load("play_button.png");
+    SDL_Surface* surface = IMG_Load("images/states/play_button.png");
     playButton = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
 }
 void loadreset() {
-    SDL_Surface* surface = IMG_Load("lose.png");
+    SDL_Surface* surface = IMG_Load("images/states/lose.png");
     reset = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
 }

@@ -60,6 +60,17 @@ void gameLoop() {
                     character.jump();
                 }
             }
+                if (e.type == SDL_QUIT) return ;
+
+            if (e.type == SDL_MOUSEMOTION) {
+                int X = e.motion.x, Y = e.motion.y;
+                if(isButtonClicked(X,Y,pause_or_continue)){
+                scrButton_PC.x=22;
+                }
+                else{
+                scrButton_PC.x=0;
+                }
+            }
 
             // Kiểm tra click chuột vào nút Pause/Continue
             if (e.type == SDL_MOUSEBUTTONDOWN) {

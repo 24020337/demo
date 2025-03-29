@@ -42,6 +42,8 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="score.cpp" />
 		<Unit filename="score.h" />
+		<Unit filename="states.cpp" />
+		<Unit filename="states.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

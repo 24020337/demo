@@ -108,7 +108,7 @@ void EnemyManager::spawnRandomEnemy() {
     if (randomType != 0 ){
         if(score<300){
         groundEnemy1.activate(SCREEN_WIDTH);
-        groundEnemy3.activate(SCREEN_WIDTH+300);
+        groundEnemy3.activate(SCREEN_WIDTH+300+rand()%100);
         }
         if(score>=310){
         groundEnemy1.activate(SCREEN_WIDTH);
